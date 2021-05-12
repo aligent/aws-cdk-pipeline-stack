@@ -3,6 +3,9 @@ import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, Stack, StackProps, StageProps, Stage, } from '@aws-cdk/core';
 import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
 
+// StackConstructor function used to construct a Stack with context only available from the calling
+// function but associated with the Pipeline Stage's scope.
+type StackConstructor = ((scope: Construct) => void);
 
 interface PipelineStageProps extends StageProps {
     envName: string,
@@ -10,8 +13,9 @@ interface PipelineStageProps extends StageProps {
 
 // Define Stage details
 class PipelineStage extends Stage {
-    constructor(scope: Construct, id: string, props: PipelineStageProps) {
+    constructor(scope: Construct, id: string, props: PipelineStageProps, stackConstructor: StackConstructor) {
         super(scope, id, props);
+        stackConstructor(this);
     }
 }
 
@@ -28,7 +32,7 @@ interface PipelineProps extends StackProps {
 
 // Define Pipeline details
 export class PipelineStack extends Stack {
-    constructor(scope: Construct, id: string, props: PipelineProps) {
+    constructor(scope: Construct, id: string, props: PipelineProps, stackConstructor: StackConstructor) {
         super(scope, id, props);
 
         const sourceArtifact = new codepipeline.Artifact();
@@ -53,6 +57,7 @@ export class PipelineStack extends Stack {
             }),
         });
 
-        pipeline.addApplicationStage(new PipelineStage(this, 'pipeline-stage', props.stageConfig), { manualApprovals: props.manualApprovals })
+        pipeline.addApplicationStage(new PipelineStage(this, 'pipeline-stage', props.stageConfig, stackConstructor), { manualApprovals: props.manualApprovals })
+
     }
 }
