@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+import 'source-map-support/register';
+const cdk = require('@aws-cdk/core');
+import { PipelineStack } from '@aligent/aws-pipeline-stack';
+import { preproduction_config, production_config } from '../lib/environments';
+import { Construct } from '@aws-cdk/core';
+
+
+
+const app = new cdk.App();
+new PipelineStack(app, preproduction_config.envname, preproduction_config,(scope: Construct): void => {new <YOUR_STACK>()});
+new PipelineStack(app, production_config.envname, production_config,(scope: Construct): void => {new <YOUR STACK>()});
