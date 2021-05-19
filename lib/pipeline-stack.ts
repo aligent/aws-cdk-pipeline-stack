@@ -7,13 +7,9 @@ import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
 // function but associated with the Pipeline Stage's scope.
 type StackConstructor = ((scope: Construct) => void);
 
-interface PipelineStageProps extends StageProps {
-    envName: string,
-}
-
 // Define Stage details
 class PipelineStage extends Stage {
-    constructor(scope: Construct, id: string, props: PipelineStageProps, stackConstructor: StackConstructor) {
+    constructor(scope: Construct, id: string, props: PipelineProps, stackConstructor: StackConstructor) {
         super(scope, id, props);
         stackConstructor(this);
     }
@@ -21,12 +17,11 @@ class PipelineStage extends Stage {
 
 // Parameters for Pipeline that runs the Stage
 interface PipelineProps extends StackProps {
-    envName: string;
     owner: string;
     repo: string;
+    envName: string;
     branch: string;
     connectionArn: string;
-    stageConfig: PipelineStageProps;
     manualApprovals: boolean;
 }
 
@@ -57,7 +52,7 @@ export class PipelineStack extends Stack {
             }),
         });
 
-        pipeline.addApplicationStage(new PipelineStage(this, 'pipeline-stage', props.stageConfig, stackConstructor), { manualApprovals: props.manualApprovals })
+        pipeline.addApplicationStage(new PipelineStage(this, 'pipeline-stage', props, stackConstructor), { manualApprovals: props.manualApprovals })
 
     }
 }
