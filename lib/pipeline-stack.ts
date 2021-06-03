@@ -9,7 +9,7 @@ type StackConstructor = ((scope: Construct) => void);
 
 // Define Stage details
 class PipelineStage extends Stage {
-    constructor(scope: Construct, id: string, props: PipelineProps, stackConstructor: StackConstructor) {
+    constructor(scope: Construct, id: string, props: StageProps, stackConstructor: StackConstructor) {
         super(scope, id, props);
         stackConstructor(this);
     }
@@ -22,6 +22,7 @@ interface PipelineProps extends StackProps {
     branch: string;
     connectionArn: string;
     manualApprovals: boolean;
+    stageProps: StageProps;
 }
 
 // Define Pipeline details
@@ -51,7 +52,7 @@ export class PipelineStack extends Stack {
             }),
         });
 
-        pipeline.addApplicationStage(new PipelineStage(this, 'pipeline-stage', props, stackConstructor), { manualApprovals: props.manualApprovals })
+        pipeline.addApplicationStage(new PipelineStage(this, 'pipeline-stage', props.stageProps, stackConstructor), { manualApprovals: props.manualApprovals })
 
     }
 }
