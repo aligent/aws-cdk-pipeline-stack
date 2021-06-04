@@ -33,7 +33,7 @@ export class PipelineStack extends Stack {
         const cloudAssemblyArtifact = new codepipeline.Artifact();
 
         const pipeline = new CdkPipeline(this, id + '-pipeline', {
-            pipelineName: props.pipelineName
+            pipelineName: props.pipelineName,
             cloudAssemblyArtifact,
             sourceAction: new codepipeline_actions.BitBucketSourceAction({
                 actionName: 'BitBucket',
