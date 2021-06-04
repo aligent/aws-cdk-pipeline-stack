@@ -22,6 +22,7 @@ interface PipelineProps extends StackProps {
     branch: string;
     connectionArn: string;
     manualApprovals: boolean;
+    pipelineName: string;
 }
 
 // Define Pipeline details
