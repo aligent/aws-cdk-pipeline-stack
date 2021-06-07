@@ -45,8 +45,41 @@ Install cdk first (`npm install -g aws-cdk`, or [this instruction](https://docs.
 
         $ npm install @aligent/aws-cdk-pipeline-stack
 
-5. Create a CDK Typescript file which creates this stack. Please see `./sample/pipeline.ts.sample`. Ensure sure to fill in all parameters in `./sample/environments.ts.sample` 
-Including:
+5. Create a CDK Typescript file which creates this stack.  
+The following CDK snippet can be used to provision a pipeline stack which deploys an empty stack into another AWS account. 
+Remember to replace the properties.
+
+```
+import 'source-map-support/register';
+import * as cdk from '@aws-cdk/core';
+import { PipelineStack } from '@aligent/aws-cdk-pipeline-stack'
+import { Stack, Construct } from '@aws-cdk/core';
+
+const pipelineStackProps = {
+     env: {
+          region: 'ap-southeast-2',
+          account: 'account-id-goes-here',
+     },
+     pipelineName: 'pipelineName',
+     stackName: 'stack-name',
+     envName: 'dev',
+     owner: 'string',
+     repo: 'repo',
+     branch: 'branch',
+     connectionArn: 'connection',
+     manualApprovals: false
+}
+const app = new cdk.App();
+
+new PipelineStack(app, 'pipeline-stack', pipelineStackProps, (scope: Construct): void => {new Stack(scope, 'blank-stack', stackProps)});
+
+```
+
+Within the anonymous function in:
+```
+new PipelineStack(app, 'pipeline-stack', pipelineStackProps, (scope: Construct): void => {new Stack(scope, 'blank-stack', stackProps)});
+```
+The preferred stack type can be constructed.
 
 7. Run `npm install` and update `cdk.json`:
 
