@@ -1,7 +1,7 @@
 # Aligent AWS Pipeline stack
 
 ## Archived
-Further updates can be found here https://github.com/aligent/cdk-constructs/tree/main/packages/waf
+No plan for further update
 
 ## Overview
 
